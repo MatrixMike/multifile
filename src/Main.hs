@@ -57,7 +57,7 @@ create'' dirStack xs = do
    properDir <- lift $ doesDirectoryExist filePath'
    if properDir then do
      filePaths <- lift $ listDirectory filePath'
-     files' <- create'' (dirStack ++ ((filter (/='/') filePath) ++ "/")) filePaths
+     files' <- create'' (dirStack ++ (filter (/='/') filePath ++ "/")) filePaths
      return files'
    else if properFile then do
      content <- lift $ readFile filePath'
@@ -68,7 +68,7 @@ create'' dirStack xs = do
 
 create' files =runExceptT $ do 
    files' <- create'' [] files
-   return $ (render $ htmlprint $ map myFun $ toContents $ Multifile files')
+   return $ render $ htmlprint ( map myFun $ toContents $ Multifile files')
 
 
 s = xmlEscapeContent  stdXmlEscaper 
@@ -82,7 +82,7 @@ cdatafy x = "<![CDATA[" ++ x ++ "]]>"
 
 
 g = 
- (\ ch ->
+ \ ch ->
       let
          i = ord ch
       in
@@ -94,7 +94,7 @@ g =
                '<' -> True 
                '>' -> True
                _ -> False
-      )
+      
 
 myFun (CString a b c) | any g b =  CString True (cdatafy b) c
                       | otherwise =  CString a b c
@@ -125,7 +125,7 @@ edit xs = do
  return ()
 
 extractMultiFile x = do 
-        let p = (readXml x :: Either String Multifile)
+        let p = readXml x :: Either String Multifile
         either print processFiles p
 
 processFiles (Multifile xs) = mapM_ processFile xs
