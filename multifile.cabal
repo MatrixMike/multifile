@@ -8,7 +8,7 @@ maintainer: hawk.alan@gmail.com
 homepage: xy30.com
 synopsis: create many files from one
 description:
-    saves the contents of files from a spefically defined xml document
+    saves the contents of files from a specifically defined xml document
 category: Text
 author: Alan Hawkins
 extra-source-files:
